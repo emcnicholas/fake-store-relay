@@ -15,6 +15,7 @@ WRONG_PAYLOAD_STRUCTURE = "Wrong JWT payload structure"
 WRONG_JWT_STRUCTURE = "Wrong JWT structure"
 WRONG_AUDIENCE = "Wrong configuration-token-audience"
 KID_NOT_FOUND = "kid from JWT header not found in API response"
+KID_MISSING = "kid is missing in response headers from jwks_host"
 WRONG_KEY = ("Failed to decode JWT with provided key. "
              "Make sure domain in custom_jwks_host "
              "corresponds to your SecureX instance region.")
@@ -36,7 +37,6 @@ def get_public_key(jwks_host, token):
     expected_errors = (
         ConnectionError,
         InvalidURL,
-        KeyError,
         JSONDecodeError,
         HTTPError
     )
@@ -56,6 +56,8 @@ def get_public_key(jwks_host, token):
 
     except expected_errors:
         raise AuthorizationError(WRONG_JWKS_HOST)
+    except KeyError:
+        raise AuthorizationError(KID_MISSING)
 
 
 def get_auth_token():

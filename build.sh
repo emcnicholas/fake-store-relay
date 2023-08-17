@@ -1,7 +1,7 @@
 #! /usr/bin/env sh
 echo " .:|:.:|:. "
 echo " C I S C O "
-echo "  SecureX "
+echo "    XDR "
 echo
 echo " Development Dockerfile build script."
 echo

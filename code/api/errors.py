@@ -12,30 +12,21 @@ class TRFormattedError(Exception):
 
     @property
     def json(self):
-        return {"type": self.type_,
-                "code": self.code,
-                "message": self.message}
+        return {"type": self.type_, "code": self.code, "message": self.message}
 
 
 class AuthorizationError(TRFormattedError):
     def __init__(self, message):
-        super().__init__(
-            AUTH_ERROR,
-            f"Authorization failed: {message}"
-        )
+        super().__init__(AUTH_ERROR, f"Authorization failed: {message}")
 
 
 class InvalidArgumentError(TRFormattedError):
     def __init__(self, message):
-        super().__init__(
-            INVALID_ARGUMENT,
-            str(message)
-        )
+        super().__init__(INVALID_ARGUMENT, str(message))
 
 
 class WatchdogError(TRFormattedError):
     def __init__(self):
         super().__init__(
-            code="health check failed",
-            message="Invalid Health Check"
+            code="health check failed", message="Invalid Health Check"
         )

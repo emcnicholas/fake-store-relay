@@ -16,13 +16,19 @@ WRONG_JWT_STRUCTURE = "Wrong JWT structure"
 WRONG_AUDIENCE = "Wrong configuration-token-audience"
 KID_NOT_FOUND = "kid from JWT header not found in API response"
 KID_MISSING = "kid is missing in response headers from jwks_host"
-WRONG_KEY = ("Failed to decode JWT with provided key. "
-             "Make sure domain in custom_jwks_host "
-             "corresponds to your SecureX instance region.")
-JWKS_HOST_MISSING = ("jwks_host is missing in JWT payload. Make sure "
-                     "custom_jwks_host field is present in module_type")
-WRONG_JWKS_HOST = ("Wrong jwks_host in JWT payload. Make sure domain follows "
-                   "the visibility.<region>.cisco.com structure")
+WRONG_KEY = (
+    "Failed to decode JWT with provided key. "
+    "Make sure domain in custom_jwks_host "
+    "corresponds to your XDR instance region."
+)
+JWKS_HOST_MISSING = (
+    "jwks_host is missing in JWT payload. Make sure "
+    "custom_jwks_host field is present in module_type"
+)
+WRONG_JWKS_HOST = (
+    "Wrong jwks_host in JWT payload. Make sure domain follows "
+    "the visibility.<region>.cisco.com structure"
+)
 
 
 def get_public_key(jwks_host, token):
@@ -34,12 +40,7 @@ def get_public_key(jwks_host, token):
     any way, replaced by another function, or even removed from the module.
     """
 
-    expected_errors = (
-        ConnectionError,
-        InvalidURL,
-        JSONDecodeError,
-        HTTPError
-    )
+    expected_errors = (ConnectionError, InvalidURL, JSONDecodeError, HTTPError)
     try:
         response = requests.get(f"https://{jwks_host}/.well-known/jwks")
         response.raise_for_status()
@@ -54,10 +55,10 @@ def get_public_key(jwks_host, token):
         kid = jwt.get_unverified_header(token)["kid"]
         return public_keys.get(kid)
 
-    except expected_errors:
-        raise AuthorizationError(WRONG_JWKS_HOST)
-    except KeyError:
-        raise AuthorizationError(KID_MISSING)
+    except expected_errors as e:
+        raise AuthorizationError(WRONG_JWKS_HOST) from e
+    except KeyError as e:
+        raise AuthorizationError(KID_MISSING) from e
 
 
 def get_auth_token():
@@ -70,14 +71,14 @@ def get_auth_token():
     """
     expected_errors = {
         KeyError: NO_AUTH_HEADER,
-        AssertionError: WRONG_AUTH_TYPE
+        AssertionError: WRONG_AUTH_TYPE,
     }
     try:
         scheme, token = request.headers["Authorization"].split()
         assert scheme.lower() == "bearer"
         return token
     except tuple(expected_errors) as error:
-        raise AuthorizationError(expected_errors[error.__class__])
+        raise AuthorizationError(expected_errors[error.__class__]) from error
 
 
 def get_jwt():
@@ -96,7 +97,7 @@ def get_jwt():
         InvalidSignatureError: WRONG_KEY,
         DecodeError: WRONG_JWT_STRUCTURE,
         InvalidAudienceError: WRONG_AUDIENCE,
-        TypeError: KID_NOT_FOUND
+        TypeError: KID_NOT_FOUND,
     }
     token = get_auth_token()
     try:
@@ -111,7 +112,7 @@ def get_jwt():
         return payload["key"]
     except tuple(expected_errors) as error:
         message = expected_errors[error.__class__]
-        raise AuthorizationError(message)
+        raise AuthorizationError(message) from error
 
 
 def get_json(schema):

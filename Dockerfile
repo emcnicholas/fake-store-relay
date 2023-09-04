@@ -1,4 +1,4 @@
-FROM alpine:3.14
+FROM alpine:3.18
 LABEL maintainer="Ian Redden <iaredden@cisco.com>"
 
 ENV PIP_IGNORE_INSTALLED 1

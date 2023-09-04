@@ -71,7 +71,7 @@ curl http://localhost:9090
 
 ## Implementation Details
 
-This application was developed and tested under Python version 3.9.
+This application was developed and tested under Python version 3.11.
 
 **NOTE.** Remember that this application is just a template so here `N/A` means
 that it has no implemented Relay endpoints and supported types of observables.

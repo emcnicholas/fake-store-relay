@@ -26,11 +26,7 @@ def calls():
     yield Call("POST", "/watchdog", HTTPStatus.METHOD_NOT_ALLOWED)
 
 
-@fixture(
-    scope="module",
-    params=calls(),
-    ids=lambda call: f"{call.method} {call.route}",
-)
+@fixture(scope="module", params=calls(), ids=lambda call: f"{call.method} {call.route}")
 def call(request):
     return request.param
 

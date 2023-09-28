@@ -49,13 +49,9 @@ def valid_json():
 
 
 @patch("requests.get")
-def test_enrich_call_success(
-    mock_request, route, client, valid_jwt, valid_json
-):
+def test_enrich_call_success(mock_request, route, client, valid_jwt, valid_json):
     mock_request.return_value = mock_api_response(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
-    response = client.post(
-        route, headers=get_headers(valid_jwt()), json=valid_json
-    )
+    response = client.post(route, headers=get_headers(valid_jwt()), json=valid_json)
     assert response.status_code == HTTPStatus.OK

@@ -49,9 +49,7 @@ def get_public_key(jwks_host, token):
         public_keys = {}
         for jwk in jwks["keys"]:
             kid = jwk["kid"]
-            public_keys[kid] = jwt.algorithms.RSAAlgorithm.from_jwk(
-                json.dumps(jwk)
-            )
+            public_keys[kid] = jwt.algorithms.RSAAlgorithm.from_jwk(json.dumps(jwk))
         kid = jwt.get_unverified_header(token)["kid"]
         return public_keys.get(kid)
 
@@ -69,10 +67,7 @@ def get_auth_token():
     anything before passing to an API endpoint, and thus it may be modified in
     any way, replaced by another function, or even removed from the module.
     """
-    expected_errors = {
-        KeyError: NO_AUTH_HEADER,
-        AssertionError: WRONG_AUTH_TYPE,
-    }
+    expected_errors = {KeyError: NO_AUTH_HEADER, AssertionError: WRONG_AUTH_TYPE}
     try:
         scheme, token = request.headers["Authorization"].split()
         assert scheme.lower() == "bearer"

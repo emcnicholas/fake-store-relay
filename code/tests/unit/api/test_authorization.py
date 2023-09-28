@@ -110,14 +110,10 @@ def test_call_with_wrong_jwt_payload_structure(
     mock_request.return_value = mock_api_response(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
-    response = client.post(
-        route, headers=get_headers(valid_jwt(wrong_structure=True))
-    )
+    response = client.post(route, headers=get_headers(valid_jwt(wrong_structure=True)))
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json == auth_errors_expected_payload(
-        WRONG_PAYLOAD_STRUCTURE
-    )
+    assert response.json == auth_errors_expected_payload(WRONG_PAYLOAD_STRUCTURE)
 
 
 @patch("requests.get")
@@ -128,9 +124,7 @@ def test_call_with_wrong_audience(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
 
-    response = client.post(
-        route, headers=get_headers(valid_jwt(aud="wrong_aud"))
-    )
+    response = client.post(route, headers=get_headers(valid_jwt(aud="wrong_aud")))
     assert response.status_code == HTTPStatus.OK
     assert response.json == auth_errors_expected_payload(WRONG_AUDIENCE)
 
@@ -143,9 +137,7 @@ def test_call_with_wrong_kid(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
 
-    response = client.post(
-        route, headers=get_headers(valid_jwt(kid="wrong_kid"))
-    )
+    response = client.post(route, headers=get_headers(valid_jwt(kid="wrong_kid")))
     assert response.status_code == HTTPStatus.OK
     assert response.json == auth_errors_expected_payload(KID_NOT_FOUND)
 
@@ -158,8 +150,6 @@ def test_call_with_missing_jwks_host(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
 
-    response = client.post(
-        route, headers=get_headers(valid_jwt(wrong_jwks_host=True))
-    )
+    response = client.post(route, headers=get_headers(valid_jwt(wrong_jwks_host=True)))
     assert response.status_code == HTTPStatus.OK
     assert response.json == auth_errors_expected_payload(JWKS_HOST_MISSING)

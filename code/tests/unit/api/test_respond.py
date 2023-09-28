@@ -96,9 +96,7 @@ def test_respond_call_with_valid_jwt_but_invalid_json_observable_value(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
     response = client.post(
-        route,
-        headers=get_headers(valid_jwt()),
-        json=invalid_json_observable_value,
+        route, headers=get_headers(valid_jwt()), json=invalid_json_observable_value
     )
     assert response.status_code == HTTPStatus.OK
     assert response.json == invalid_json_expected_payload(
@@ -120,13 +118,9 @@ def valid_json(route):
 
 
 @patch("requests.get")
-def test_respond_call_success(
-    mock_request, route, client, valid_jwt, valid_json
-):
+def test_respond_call_success(mock_request, route, client, valid_jwt, valid_json):
     mock_request.return_value = mock_api_response(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
     )
-    response = client.post(
-        route, headers=get_headers(valid_jwt()), json=valid_json
-    )
+    response = client.post(route, headers=get_headers(valid_jwt()), json=valid_json)
     assert response.status_code == HTTPStatus.OK

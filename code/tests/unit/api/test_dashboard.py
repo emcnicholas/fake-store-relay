@@ -18,9 +18,7 @@ def wrong_calls():
         "'tile-id': ['Unknown field.']}",
     )
     yield WrongCall(
-        "/tiles/tile",
-        {"tile_id": ""},
-        "{'tile_id': ['Field may not be blank.']}",
+        "/tiles/tile", {"tile_id": ""}, "{'tile_id': ['Field may not be blank.']}"
     )
     yield WrongCall(
         "/tiles/tile-data",
@@ -49,8 +47,7 @@ def wrong_calls():
 @fixture(
     scope="module",
     params=wrong_calls(),
-    ids=lambda wrong_payload: f"{wrong_payload.endpoint}, "
-    f"{wrong_payload.payload}",
+    ids=lambda wrong_payload: f"{wrong_payload.endpoint}, " f"{wrong_payload.payload}",
 )
 def wrong_call(request):
     return request.param
@@ -60,9 +57,7 @@ def wrong_call(request):
 def invalid_argument_expected_payload():
     def _make_message(message):
         return {
-            "errors": [
-                {"code": INVALID_ARGUMENT, "message": message, "type": "fatal"}
-            ]
+            "errors": [{"code": INVALID_ARGUMENT, "message": message, "type": "fatal"}]
         }
 
     return _make_message
@@ -70,11 +65,7 @@ def invalid_argument_expected_payload():
 
 @patch("requests.get")
 def test_dashboard_call_with_wrong_payload(
-    mock_request,
-    wrong_call,
-    client,
-    valid_jwt,
-    invalid_argument_expected_payload,
+    mock_request, wrong_call, client, valid_jwt, invalid_argument_expected_payload
 ):
     mock_request.return_value = mock_api_response(
         payload=EXPECTED_RESPONSE_OF_JWKS_ENDPOINT
@@ -86,9 +77,7 @@ def test_dashboard_call_with_wrong_payload(
         json=wrong_call.payload,
     )
     assert response.status_code == HTTPStatus.OK
-    assert response.json == invalid_argument_expected_payload(
-        wrong_call.message
-    )
+    assert response.json == invalid_argument_expected_payload(wrong_call.message)
 
 
 def routes():

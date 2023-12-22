@@ -1,0 +1,86 @@
+{
+    "data": {
+        "valid_time": {
+            "start_time": "2023-12-22T17:04:35.503Z",
+            "end_time": "2023-12-22T17:06:35.503Z"
+        },
+        "module_type_id": "33f84895-3f59-488f-a13d-0e0ccabebcf7",
+        "module": "Fake Store v2",
+        "tile_id": "fakestore_categories",
+        "keys": [
+            {
+                "key": "electronics",
+                "label": "electronics"
+            },
+            {
+                "key": "jewelery",
+                "label": "jewelery"
+            },
+            {
+                "key": "men's clothing",
+                "label": "men's clothing"
+            },
+            {
+                "key": "women's clothing",
+                "label": "women's clothing"
+            }
+        ],
+        "cache_scope": "org",
+        "period": "last_hour",
+        "observed_time": {
+            "start_time": "2023-12-22T17:04:35.503Z",
+            "end_time": "2023-12-22T17:04:35.503Z"
+        },
+        "module_instance_id": "713b914e-defa-4d59-8b1f-ca30b0c5bc1f",
+        "data": [
+            {
+                "key": "electronics",
+                "label": "electronics",
+                "value": 10,
+                "values": [
+                    {
+                        "key": "electronics",
+                        "link_uri": "https://fakestoreapi.com/docs",
+                        "value": 1
+                    }
+                ]
+            },
+            {
+                "key": "jewelery",
+                "label": "jewelery",
+                "value": 15,
+                "values": [
+                    {
+                        "key": "jewelery",
+                        "link_uri": "https://fakestoreapi.com/docs",
+                        "value": 15
+                    }
+                ]
+            },
+            {
+                "key": "men's clothing",
+                "label": "men's clothing",
+                "value": 20,
+                "values": [
+                    {
+                        "key": "men's clothing",
+                        "link_uri": "https://fakestoreapi.com/docs",
+                        "value": 20
+                    }
+                ]
+            },
+            {
+                "key": "women's clothing",
+                "label": "women's clothing",
+                "value": 25,
+                "values": [
+                    {
+                        "key": "women's clothing",
+                        "link_uri": "https://fakestoreapi.com/docs",
+                        "value": 25
+                    }
+                ]
+            }
+        ]
+    }
+}

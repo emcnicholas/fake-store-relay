@@ -11,14 +11,22 @@ dashboard_api = Blueprint("dashboard", __name__)
 def tiles():
     #_ = get_jwt()
     return jsonify_data([
-        tile_def("Product Categories",
-        "Number of products per category",
-        ["last_hour"],
-        "last_hour",
-        "horizontal_bar_chart",
-        "Number of products per category",
-        "fakestore_categories",
-        ["categories"])
+        tile_def("Product Categories Horizontal Bar Chart",
+                 "Number of products per category",
+                 ["last_hour"],
+                 "last_hour",
+                 "horizontal_bar_chart",
+                 "Number of products per category",
+                 "fakestore_categories",
+                 ["categories"]),
+        tile_def("Product Categories Vertical Bar Chart",
+                 "Number of products per category",
+                 ["last_hour"],
+                 "last_hour",
+                 "vertical_bar_chart",
+                 "Number of products per category",
+                 "fakestore_categories_vertical",
+                 ["categories"])
     ])
 
 
@@ -39,6 +47,16 @@ def tile_data():
         tile_data = horizontal_bar_data(
             period,
             "fakestore_categories",
+            keys,
+            "last_hour",
+            data
+        )
+        return jsonify_data(tile_data)
+    elif req["tile_id"] == "fakestore_categories_vertical":
+        keys, data = fakestore_horizontal_bar_data()
+        tile_data = horizontal_bar_data(
+            period,
+            "fakestore_categories_vertical",
             keys,
             "last_hour",
             data

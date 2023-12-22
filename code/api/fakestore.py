@@ -1,12 +1,11 @@
 # Functions to interact with Fake Store API
 
 from datetime import datetime, timedelta
-
+import requests
 
 ########################
 # Get formatted UTC Time
 ########################
-import requests
 
 
 def get_time_period(period):

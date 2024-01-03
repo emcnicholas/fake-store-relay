@@ -57,9 +57,9 @@ def tile_def(title, desc, periods, default_period, tile_type, short_desc, tile_i
 
 #
 # This function is used to populate data into a horizontal bar graph in dashboard.
-# tile_id           - Type "string". ID is used to refer the tile data to the tile type.
-# keys - Type [list] of key value pairs to identify the bars in the graph. For example, electronics, jewelery, etc...
-# period - Type "string. The le
+# tile_id  - Type "string". ID is used to refer the tile data to the tile type.
+# keys     - Type [list] of key value pairs to identify the bars in the graph. For example, electronics, jewelery, etc...
+# period   - Type "string. The le
 
 def horizontal_bar_data(time_period, tile_id, keys, period, data):
     start_time, end_time = get_time_period(time_period)
@@ -79,6 +79,28 @@ def horizontal_bar_data(time_period, tile_id, keys, period, data):
             "data": data
         }
     return data
+
+
+def donut_graph_data(time_period, tile_id, label_headers, labels, period, data):
+    start_time, end_time = get_time_period(time_period)
+    data = {
+            "valid_time": {
+                "start_time": start_time,
+                "end_time": end_time
+            },
+            "tile_id": tile_id,
+            "label_headers": label_headers,
+            "labels": labels,
+            "cache_scope": "org",
+            "period": period,
+            "observed_time": {
+                "start_time": start_time,
+                "end_time": end_time
+            },
+            "data": data
+        }
+    return data
+
 
 def get_categories():
     url = "https://fakestoreapi.com/products/categories"
@@ -110,6 +132,55 @@ def get_products_per_category(category):
         return json_response
 
 
+def get_products():
+    url = "https://fakestoreapi.com/products"
+
+    payload = {}
+    headers = {}
+
+    response = requests.get(url, headers=headers, data=payload)
+
+    if response.status_code != 200:
+        return f'Response code: {response.status_code}'
+    else:
+        json_response = response.json()
+        return json_response
+
+
+def get_product_info():
+    product_list = []
+    products = get_products()
+    for product in products:
+        product_list.append(
+            {
+                "title": product["title"],
+                "price": product["price"],
+                "category": product["category"],
+                "rating": product["rating"]["rate"],
+                "count": product["rating"]["count"]
+            }
+        )
+    return product_list
+
+
+def get_category_rating_amount(products):
+    ratings_amount = []
+    zero = [product for product in products if product["rating"]["rate"] < 1]
+    ratings_amount.append(len(zero))
+    one = [product for product in products if 1 <= product["rating"]["rate"] < 2]
+    ratings_amount.append(len(one))
+    two = [product for product in products if 2 <= product["rating"]["rate"] < 3]
+    ratings_amount.append(len(two))
+    three = [product for product in products if 3 <= product["rating"]["rate"] < 4]
+    ratings_amount.append(len(three))
+    four = [product for product in products if 4 <= product["rating"]["rate"] < 5]
+    ratings_amount.append(len(four))
+    five = [product for product in products if product["rating"]["rate"] >= 5]
+    ratings_amount.append(len(five))
+
+    return ratings_amount
+
+
 def fakestore_horizontal_bar_data():
     keys = []
     data = []
@@ -138,4 +209,38 @@ def fakestore_horizontal_bar_data():
         )
     return keys, data
 
+
+def get_fakestore_donut_graph_data():
+    categories = get_categories()
+    category_amount = []
+    category_rating_amount = []
+    label_headers = ["Category", "Rating"]
+    ratings = ["0", "1", "2", "3", "4", "5"]
+    labels = [categories, ratings]
+    data = []
+    for category in categories:
+        category_products = get_products_per_category(category)
+        category_amount.append(len(category_products))
+        category_ratings = get_category_rating_amount(category_products)
+        category_rating_amount.append(category_ratings)
+        segment = []
+        for key, rating in enumerate(category_ratings):
+            segment.append(
+                {
+                    "key": key,
+                    "value": rating
+                }
+            )
+
+        data.append(
+            {
+                "key": categories.index(category),
+                "value": len(category_products),
+                "link_uri": f"https://fakestoreapi.com/products/category/{category}",
+                "tooltip": f"Fake Store Category {category}",
+                "segments": segment
+            }
+        )
+
+    return label_headers, labels, data
 

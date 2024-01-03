@@ -2,7 +2,8 @@ from flask import Blueprint
 from api.utils import jsonify_data, get_jwt, get_json
 from api.schemas import DashboardTileSchema, DashboardTileDataSchema
 
-from api.fakestore import tile_def, fakestore_horizontal_bar_data, horizontal_bar_data
+from api.fakestore import tile_def, fakestore_horizontal_bar_data, horizontal_bar_data, get_fakestore_donut_graph_data, donut_graph_data
+
 
 dashboard_api = Blueprint("dashboard", __name__)
 
@@ -26,7 +27,15 @@ def tiles():
                  "vertical_bar_chart",
                  "Number of products per category",
                  "fakestore_categories_vertical",
-                 ["categories"])
+                 ["categories"]),
+        tile_def("Product Ratings Donut Chart",
+                 "Product rating per category",
+                 ["last_hour"],
+                 "last_hour",
+                 "donut_graph",
+                 "product rating per category",
+                 "fakestore_ratings",
+                 ["categories", "ratings"])
     ])
 
 
@@ -62,6 +71,16 @@ def tile_data():
             data
         )
         return jsonify_data(tile_data)
-
+    elif req["tile_id"] == "fakestore_ratings":
+        label_headers, labels, data = get_fakestore_donut_graph_data()
+        tile_data = donut_graph_data(
+            period,
+            "fakestore_ratings",
+            label_headers,
+            labels,
+            "last_hour",
+            data
+        )
+        return jsonify_data(tile_data)
     else:
         return jsonify_data({})

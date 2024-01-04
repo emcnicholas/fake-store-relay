@@ -1,4 +1,4 @@
-NAME:="tr-05-docker-relay"
+NAME:="fake-store-relay"
 PORT:="9090"
 
 all: test build
